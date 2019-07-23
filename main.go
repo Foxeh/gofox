@@ -3,14 +3,26 @@ package main
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/paked/configure"
+	"os"
 )
 
 var (
-	botID string
+	conf   = configure.New()
+	botKey = conf.String("botKey", "", "Bot key value")
+	botID  string
 )
 
 func main() {
-	discord, err := discordgo.New("Bot <INSERT REALLY LONG BOT KEY HERE>")
+	// Pull in configuration
+	conf.Use(configure.NewFlag())
+	conf.Use(configure.NewEnvironment())
+	if _, err := os.Stat("config.json"); err == nil {
+		conf.Use(configure.NewJSONFromFile("config.json"))
+	}
+	conf.Parse()
+
+	discord, err := discordgo.New(*botKey)
 	errCheck("error creating discord session", err)
 	user, err := discord.User("@me")
 	errCheck("error retrieving account", err)
