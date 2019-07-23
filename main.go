@@ -6,11 +6,11 @@ import (
 )
 
 var (
-	botID	string
+	botID string
 )
 
 func main() {
-	discord, err := discordgo.New("Bot NjAzMTk3NTUwMzgzNzI2NjIy.XTb60g.Y-sTmVYTVVizn-eYq1DXJAXrano")
+	discord, err := discordgo.New("Bot <INSERT REALLY LONG BOT KEY HERE>")
 	errCheck("error creating discord session", err)
 	user, err := discord.User("@me")
 	errCheck("error retrieving account", err)
