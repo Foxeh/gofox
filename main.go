@@ -1,21 +1,25 @@
 package main
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"github.com/paked/configure"
 	"io"
 	"log"
 	"os"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/paked/configure"
 )
 
 var (
-	conf    = configure.New()
-	botKey  = conf.String("botKey", "", "Bot key value")
 	botID   string
 	Info    *log.Logger
 	Warning *log.Logger
 	Error   *log.Logger
+	conf    = configure.New()
+	botKey  = conf.String("botKey", "", "Bot key value")
 )
+
+// Current GoFox version
+const Version = "v0.1.0-alpha"
 
 func Init(
 	infoHandle io.Writer,
@@ -61,7 +65,8 @@ func main() {
 		errCheck("Error attempting to set my status", err)
 
 		servers := discord.State.Guilds
-		Info.Printf("GoFox has started on %d servers", len(servers))
+		Info.Printf("GoFox is running version: %s", Version)
+		Info.Printf("GoFox has started on %d server(s)", len(servers))
 	})
 
 	// Open a websocket connection to Discord
