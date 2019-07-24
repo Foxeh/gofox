@@ -27,15 +27,15 @@ func Init(
 	errorHandle io.Writer) {
 
 	Info = log.New(infoHandle,
-		"INFO: ",
+		"INFO - ",
 		log.Ldate|log.Ltime|log.Lshortfile)
 
 	Warning = log.New(warningHandle,
-		"WARNING: ",
+		"WARNING - ",
 		log.Ldate|log.Ltime|log.Lshortfile)
 
 	Error = log.New(errorHandle,
-		"ERROR: ",
+		"ERROR - ",
 		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
