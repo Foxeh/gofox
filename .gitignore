@@ -17,5 +17,5 @@
 # vendor/
 
 .idea/
-discordBot.iml
 /config.json
+GoFox.iml
