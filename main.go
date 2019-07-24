@@ -1,19 +1,44 @@
 package main
 
 import (
-	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/paked/configure"
+	"io"
+	"log"
 	"os"
 )
 
 var (
-	conf   = configure.New()
-	botKey = conf.String("botKey", "", "Bot key value")
-	botID  string
+	conf    = configure.New()
+	botKey  = conf.String("botKey", "", "Bot key value")
+	botID   string
+	Info    *log.Logger
+	Warning *log.Logger
+	Error   *log.Logger
 )
 
+func Init(
+	infoHandle io.Writer,
+	warningHandle io.Writer,
+	errorHandle io.Writer) {
+
+	Info = log.New(infoHandle,
+		"INFO: ",
+		log.Ldate|log.Ltime|log.Lshortfile)
+
+	Warning = log.New(warningHandle,
+		"WARNING: ",
+		log.Ldate|log.Ltime|log.Lshortfile)
+
+	Error = log.New(errorHandle,
+		"ERROR: ",
+		log.Ldate|log.Ltime|log.Lshortfile)
+}
+
 func main() {
+	// Setup logger
+	Init(os.Stdout, os.Stdout, os.Stderr)
+
 	// Pull in configuration
 	conf.Use(configure.NewFlag())
 	conf.Use(configure.NewEnvironment())
@@ -22,22 +47,24 @@ func main() {
 	}
 	conf.Parse()
 
+	// Create new bot instance
 	discord, err := discordgo.New(*botKey)
 	errCheck("error creating discord session", err)
 	user, err := discord.User("@me")
 	errCheck("error retrieving account", err)
 
+	// Set BotID and command handler
 	botID = user.ID
 	discord.AddHandler(commandHandler)
 	discord.AddHandler(func(discord *discordgo.Session, ready *discordgo.Ready) {
-		err = discord.UpdateStatus(0, "Test Golang Bot")
-		if err != nil {
-			fmt.Println("Error attempting to set my status")
-		}
+		err = discord.UpdateStatus(0, "Golang FoxBot")
+		errCheck("Error attempting to set my status", err)
+
 		servers := discord.State.Guilds
-		fmt.Printf("GoBot has started on %d servers", len(servers))
+		Info.Printf("GoFox has started on %d servers", len(servers))
 	})
 
+	// Open a websocket connection to Discord
 	err = discord.Open()
 	errCheck("Error opening connection to Discord", err)
 	defer discord.Close()
@@ -47,7 +74,7 @@ func main() {
 
 func errCheck(msg string, err error) {
 	if err != nil {
-		fmt.Printf("%s: %+v", msg, err)
+		Error.Printf("%s: %+v", msg, err)
 		panic(err)
 	}
 }
@@ -64,7 +91,6 @@ func commandHandler(discord *discordgo.Session, message *discordgo.MessageCreate
 	if content == "!Test" {
 		_, err := discord.ChannelMessageSend(message.ChannelID, "Testing...")
 		errCheck("Error sending message.", err)
+		Warning.Printf("Message: %+v || From: %s\n", message.Message, message.Author)
 	}
-
-	fmt.Printf("Message: %+v || From: %s\n", message.Message, message.Author)
 }
