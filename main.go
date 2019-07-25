@@ -21,10 +21,7 @@ var (
 // Current GoFox version
 const Version = "v0.1.0-alpha"
 
-func Init(
-	infoHandle io.Writer,
-	warningHandle io.Writer,
-	errorHandle io.Writer) {
+func Init(infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer) {
 
 	Info = log.New(infoHandle,
 		"INFO - ",
