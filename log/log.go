@@ -1,9 +1,8 @@
-package logging
+package log
 
 import (
 	"io"
 	"log"
-	"os"
 )
 
 var (
@@ -25,9 +24,4 @@ func Init(infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer) 
 	Error = log.New(errorHandle,
 		"ERROR - ",
 		log.Ldate|log.Ltime|log.Lshortfile)
-}
-
-func Log() {
-	// Setup logger
-	Init(os.Stdout, os.Stdout, os.Stderr)
 }
