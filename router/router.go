@@ -5,12 +5,17 @@ package router
 
 import (
 	"fmt"
-	"log"
+	"github.com/Foxeh/gofox/log"
+	"github.com/bwmarrin/discordgo"
+	"os"
 	"regexp"
 	"strings"
-
-	"github.com/bwmarrin/discordgo"
 )
+
+func init() {
+	// Call logger
+	log.Init(os.Stdout, os.Stdout, os.Stderr)
+}
 
 // Route holds information about a specific message route handler
 type Route struct {
@@ -123,12 +128,12 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 		// Try fetching via REST API
 		c, err = ds.Channel(mc.ChannelID)
 		if err != nil {
-			log.Printf("unable to fetch Channel for Message, %s", err)
+			log.Error.Printf("unable to fetch Channel for Message, %s", err)
 		} else {
 			// Attempt to add this channel into our State
 			err = ds.State.ChannelAdd(c)
 			if err != nil {
-				log.Printf("error updating State with Channel, %s", err)
+				log.Error.Printf("error updating State with Channel, %s", err)
 			}
 		}
 	}
