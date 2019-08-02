@@ -14,7 +14,7 @@ var (
 )
 
 // Current GoFox version
-const Version = "v0.1.0-alpha"
+const Version = "v0.2.0-alpha"
 
 func main() {
 	// Call logger

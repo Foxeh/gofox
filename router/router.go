@@ -42,15 +42,14 @@ type HandlerFunc func(*discordgo.Session, *discordgo.Message, *Context)
 
 // Router is the main struct for all Router methods.
 type Router struct {
-	Routes  []*Route
-	Default *Route
-	Prefix  string
+	Routes []*Route
+	Prefix string
 }
 
 // New returns a new Discord message route Router
 func New() *Router {
 	m := &Router{}
-	m.Prefix = "-dg "
+	m.Prefix = "f!"
 	return m
 }
 
@@ -68,7 +67,7 @@ func (m *Router) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
 
 // FuzzyMatch attempts to find the best route match for a givin message.
 func (m *Router) FuzzyMatch(msg string) (*Route, []string) {
-
+	// TODO: Change to be a bit more strict on matching
 	// Tokenize the msg string into a slice of words
 	fields := strings.Fields(msg)
 
@@ -172,7 +171,7 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	// Detect prefix mention
 	if !ctx.IsDirected && len(m.Prefix) > 0 {
 
-		// TODO : Must be changed to support a per-guild user defined prefix
+		// TODO : Option to change prefix to support a per-guild user defined prefix
 		if strings.HasPrefix(ctx.Content, m.Prefix) {
 			ctx.IsDirected, ctx.HasPrefix, ctx.HasMentionFirst = true, true, true
 			ctx.Content = strings.TrimPrefix(ctx.Content, m.Prefix)
@@ -180,7 +179,6 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	}
 
 	// For now, if we're not specifically mentioned we do nothing.
-	// later I might add an option for global non-mentioned command words
 	if !ctx.IsDirected {
 		return
 	}
@@ -188,19 +186,11 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	// Try to find the "best match" command out of the message.
 	r, fl := m.FuzzyMatch(ctx.Content)
 	if r != nil {
+		// TODO: Change to do something different when mentioned vs using prefix.
+		// TODO: Possibly add rate limit?
+		log.Info.Printf("Message: %+v || From: %s\n", mc.Message, mc.Author)
 		ctx.Fields = fl
 		r.Run(ds, mc.Message, ctx)
 		return
 	}
-
-	// If no command match was found, call the default.
-	// Ignore if only @mentioned in the middle of a message
-	if m.Default != nil && (ctx.HasMentionFirst) {
-		// TODO: This could use a ratelimit
-		// or should the ratelimit be inside the cmd handler?..
-		// In the case of "talking" to another bot, this can create an endless
-		// loop.  Probably most common in private messages.
-		m.Default.Run(ds, mc.Message, ctx)
-	}
-
 }
