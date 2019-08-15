@@ -14,12 +14,9 @@ var (
 )
 
 // Current GoFox version
-const Version = "v0.2.0-alpha"
+const Version = "v0.3.0-alpha"
 
-func main() {
-	// Call logger
-	log.Init(os.Stdout, os.Stdout, os.Stderr)
-
+func init() {
 	// Pull in configuration
 	conf.Use(configure.NewFlag())
 	conf.Use(configure.NewEnvironment())
@@ -27,7 +24,9 @@ func main() {
 		conf.Use(configure.NewJSONFromFile("config.json"))
 	}
 	conf.Parse()
+}
 
+func main() {
 	// Set bot token
 	Discord.Token = *botKey
 

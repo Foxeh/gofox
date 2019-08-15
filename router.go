@@ -20,4 +20,5 @@ func init() {
 	// Register the build-in help command.
 	_, _ = Router.Route("help", "Display this message.", Router.Help)
 	_, _ = Router.Route("ping", "pong!", Router.Ping)
+	_, _ = Router.Route("wolfram", "Query Wolfram Alpha", Router.Wolfram)
 }

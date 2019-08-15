@@ -42,8 +42,9 @@ type HandlerFunc func(*discordgo.Session, *discordgo.Message, *Context)
 
 // Router is the main struct for all Router methods.
 type Router struct {
-	Routes []*Route
-	Prefix string
+	Routes  []*Route
+	Prefix  string
+	Pattern string
 }
 
 // New returns a new Discord message route Router
@@ -61,6 +62,9 @@ func (m *Router) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
 	r.Description = desc
 	r.Run = cb
 	m.Routes = append(m.Routes, &r)
+
+	// Set Pattern to be reachable by commands
+	m.Pattern = pattern
 
 	return &r, nil
 }
