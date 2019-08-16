@@ -1,3 +1,4 @@
 {
-  "botKey": "Bot <INSERT REALLY LONG BOT KEY HERE>"
+  "botKey": "Bot <INSERT REALLY LONG BOT KEY HERE>",
+  "wolframID": "<WOLFRAM ALPHA REQUEST KEY>"
 }

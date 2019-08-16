@@ -14,7 +14,7 @@ var (
 )
 
 // Current GoFox version
-const Version = "v0.3.0-alpha"
+const Version = "v0.4.0-alpha"
 
 func init() {
 	// Pull in configuration
@@ -48,6 +48,5 @@ func main() {
 func errCheck(msg string, err error) {
 	if err != nil {
 		log.Error.Printf("%s: %+v", msg, err)
-		panic(err)
 	}
 }

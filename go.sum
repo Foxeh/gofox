@@ -7,5 +7,7 @@ github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
 github.com/paked/configure v0.0.0-20190218140148-28f9c3f21a44 h1:kjzfKpM4fElkBIN77VEjv1VXpAEQhYLrhjex/by6aOU=
 github.com/paked/configure v0.0.0-20190218140148-28f9c3f21a44/go.mod h1:y9MA8YrqgIDBMhU+Dgzu5okImVGccMdjHnWv6md5rfs=
+github.com/subosito/shorturl v1.0.0 h1:MGONdIh75VxiG/llz+mcLd2FATWAZFRa3a9ThFFJ/5A=
+github.com/subosito/shorturl v1.0.0/go.mod h1:YPY1oyCqGwaMYRyLGheJ/4FZsgxUvv/9nwp69hNzohQ=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16 h1:y6ce7gCWtnH+m3dCjzQ1PCuwl28DDIc3VNnvY29DlIA=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
