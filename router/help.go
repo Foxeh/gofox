@@ -54,15 +54,10 @@ func (m *Router) Help(ds *discordgo.Session, dm *discordgo.Message, ctx *Context
 	sort.Strings(keys)
 
 	// TODO: Learn more link needs to be configurable
-	resp := "\n*Commands can be abbreviated and mixed with other text.*\n"
-	resp += "```autoit\n"
+	resp := "\n**Commands can be abbreviated and mixed with other text.**\n"
+	resp += "```\n"
 
 	v, ok := cmdmap["help"]
-	if ok {
-		keys = append([]string{v.Pattern}, keys...)
-	}
-
-	v, ok = cmdmap["about"]
 	if ok {
 		keys = append([]string{v.Pattern}, keys...)
 	}
@@ -70,7 +65,7 @@ func (m *Router) Help(ds *discordgo.Session, dm *discordgo.Message, ctx *Context
 	// Add sorted result to help msg
 	for _, k := range keys {
 		v := cmdmap[k]
-		resp += fmt.Sprintf("%s%-"+strconv.Itoa(maxlen)+"s # %s\n", cp, v.Pattern+v.Help, v.Description)
+		resp += fmt.Sprintf("%s %-"+strconv.Itoa(maxlen)+"s # %s\n", cp, v.Pattern+v.Help, v.Description)
 	}
 
 	resp += "```\n"

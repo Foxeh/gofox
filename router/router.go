@@ -50,7 +50,7 @@ type Router struct {
 // New returns a new Discord message route Router
 func New() *Router {
 	m := &Router{}
-	m.Prefix = "f!"
+	m.Prefix = "pls"
 	return m
 }
 
@@ -63,13 +63,10 @@ func (m *Router) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
 	r.Run = cb
 	m.Routes = append(m.Routes, &r)
 
-	// Set Pattern to be reachable by commands
-	m.Pattern = pattern
-
 	return &r, nil
 }
 
-// FuzzyMatch attempts to find the best route match for a givin message.
+// FuzzyMatch attempts to find the best route match for a given message.
 func (m *Router) FuzzyMatch(msg string) (*Route, []string) {
 	// TODO: Change to be a bit more strict on matching
 	// Tokenize the msg string into a slice of words
@@ -131,12 +128,12 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 		// Try fetching via REST API
 		c, err = ds.Channel(mc.ChannelID)
 		if err != nil {
-			log.Error.Printf("unable to fetch Channel for Message, %s", err)
+			log.Warning.Printf("Unable to fetch Channel for Message, %s", err)
 		} else {
 			// Attempt to add this channel into our State
 			err = ds.State.ChannelAdd(c)
 			if err != nil {
-				log.Error.Printf("error updating State with Channel, %s", err)
+				log.Warning.Printf("Error updating State with Channel, %s", err)
 			}
 		}
 	}
@@ -173,8 +170,7 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	}
 
 	// Detect prefix mention
-	if !ctx.IsDirected && len(m.Prefix) > 0 {
-
+	if len(m.Prefix) > 0 {
 		// TODO : Option to change prefix to support a per-guild user defined prefix
 		if strings.HasPrefix(ctx.Content, m.Prefix) {
 			ctx.IsDirected, ctx.HasPrefix, ctx.HasMentionFirst = true, true, true
@@ -192,7 +188,7 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	if r != nil {
 		// TODO: Change to do something different when mentioned vs using prefix.
 		// TODO: Possibly add rate limit?
-		log.Info.Printf("Message: %+v || From: %s\n", mc.Message, mc.Author)
+		log.Info.Printf("Time: %s || Author: %s || Message: %s\n", mc.Timestamp, mc.Author, mc.Content)
 		ctx.Fields = fl
 		r.Run(ds, mc.Message, ctx)
 		return

@@ -25,3 +25,9 @@ func Init(infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer) 
 		"ERROR - ",
 		log.Ldate|log.Ltime|log.Lshortfile)
 }
+
+func ErrCheck(msg string, err error) {
+	if err != nil {
+		Error.Printf("%s: %+v", msg, err)
+	}
+}

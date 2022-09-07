@@ -1,9 +1,5 @@
 package main
 
-// This file adds the Disgord message route multiplexer, aka "command router".
-// to the Disgord bot. This is an optional addition however it is included
-// by default to demonstrate how to extend the Disgord bot.
-
 import (
 	"github.com/Foxeh/gofox/router"
 )
@@ -13,12 +9,17 @@ import (
 var Router = router.New()
 
 func init() {
-	// Register the mux OnMessageCreate handler that listens for and processes
+	// Register the router OnMessageCreate handler that listens for and processes
 	// all messages received.
 	Discord.AddHandler(Router.OnMessageCreate)
 
-	// Register the build-in help command.
-	_, _ = Router.Route("help", "Display this message.", Router.Help)
+	// Commands to look for
+	// Comment out commands to turn them off
+
 	_, _ = Router.Route("ping", "pong!", Router.Ping)
+	_, _ = Router.Route("help", "Display this message.", Router.Help)
+	_, _ = Router.Route("pp", "Check pp size.", Router.Pp)
 	_, _ = Router.Route("wolfram", "Query Wolfram Alpha", Router.Wolfram)
+	_, _ = Router.Route("stankrate", "Check stank levels.", Router.Stankrate)
+
 }

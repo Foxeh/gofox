@@ -43,7 +43,11 @@ func init() {
 func (m *Router) Wolfram(ds *discordgo.Session, dm *discordgo.Message, ctx *Context) {
 
 	// Get content to be queried by wolfram alpha, removing prefix/command
-	content := strings.Trim(dm.Content, m.Prefix+m.Pattern)
+	pattern := m.Prefix + " wolfram "
+	content := strings.Replace(dm.Content, pattern, "", 1)
+	
+	log.Info.Printf(content)
+
 	// Format query to URL
 	content = url.QueryEscape(content)
 
@@ -52,11 +56,11 @@ func (m *Router) Wolfram(ds *discordgo.Session, dm *discordgo.Message, ctx *Cont
 
 	// Get query
 	res, err := http.Get(wolfURL)
-	errCheck("Error querying wolfram alpha", err)
+	log.ErrCheck("Error querying wolfram alpha", err)
 
 	// Format http.Get body
 	data, err := ioutil.ReadAll(res.Body)
-	errCheck("Failed to get request body", err)
+	log.ErrCheck("Failed to get request body", err)
 
 	// Create tinyurl of query
 	shortURL := urlShorten(content)
@@ -77,7 +81,7 @@ func (m *Router) Wolfram(ds *discordgo.Session, dm *discordgo.Message, ctx *Cont
 func getResult(data []byte) string {
 	var pods WolframResponse
 	err := json.Unmarshal(data, &pods)
-	errCheck("Failed during json.Unmarshal", err)
+	log.ErrCheck("Failed during json.Unmarshal", err)
 
 	for i := range pods.Queryresult.Pods {
 		if pods.Queryresult.Pods[i].Title == "Result" {
@@ -91,12 +95,6 @@ func getResult(data []byte) string {
 func urlShorten(content string) string {
 	provider := "gggg"
 	shortURL, err := shorturl.Shorten("https://www.wolframalpha.com/input/?i="+content, provider)
-	errCheck("Error shortening URL", err)
+	log.ErrCheck("Error shortening URL", err)
 	return string(shortURL)
-}
-
-func errCheck(msg string, err error) {
-	if err != nil {
-		log.Error.Printf("%s: %+v", msg, err)
-	}
 }
