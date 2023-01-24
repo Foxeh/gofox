@@ -1,4 +1,4 @@
-// Package Router provides a simple Discord message route multiplexer that
+// Package router provides a simple Discord message route multiplexer that
 // parses messages and then executes a matching registered handler, if found.
 // Router can be used with both Disgord and the DiscordGo library.
 package router

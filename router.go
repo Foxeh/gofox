@@ -1,18 +1,6 @@
 package main
 
-import (
-	"github.com/Foxeh/gofox/router"
-)
-
-// Router is registered as a global variable to allow easy access to the
-// multiplexer throughout the bot.
-var Router = router.New()
-
 func init() {
-	// Register the router OnMessageCreate handler that listens for and processes
-	// all messages received.
-	Discord.AddHandler(Router.OnMessageCreate)
-
 	// Commands to look for
 	// Comment out commands to turn them off
 

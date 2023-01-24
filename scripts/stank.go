@@ -5,6 +5,7 @@ import (
 	"github.com/Foxeh/gofox/sqldb"
 	myTypes "github.com/Foxeh/gofox/sqldb"
 	"github.com/bwmarrin/discordgo"
+	"time"
 )
 
 type StankNumbers myTypes.StankNumbers
@@ -35,7 +36,7 @@ func StankRanking(dm *discordgo.Message, score int) {
 	return
 }
 
-func updateStankScores(stankNumbers StankNumbers, time discordgo.Timestamp, score int) {
+func updateStankScores(stankNumbers StankNumbers, time time.Time, score int) {
 	// Update averages
 	tries := stankNumbers.NumberTries + 1
 	average := ((stankNumbers.AverageScore * stankNumbers.NumberTries) + score) / tries

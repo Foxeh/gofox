@@ -5,6 +5,7 @@ import (
 	"github.com/Foxeh/gofox/sqldb"
 	myTypes "github.com/Foxeh/gofox/sqldb"
 	"github.com/bwmarrin/discordgo"
+	"time"
 )
 
 type PpNumbers myTypes.PpNumbers
@@ -35,7 +36,7 @@ func PpRanking(dm *discordgo.Message, score int) {
 	return
 }
 
-func updatePpScores(ppNumbers PpNumbers, time discordgo.Timestamp, score int) {
+func updatePpScores(ppNumbers PpNumbers, time time.Time, score int) {
 	// Update averages
 	tries := ppNumbers.NumberTries + 1
 	average := ((ppNumbers.AverageScore * ppNumbers.NumberTries) + score) / tries

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Foxeh/gofox/log"
+	"github.com/Foxeh/gofox/router"
 	"github.com/Foxeh/gofox/sqldb"
 	"github.com/bwmarrin/discordgo"
 	_ "github.com/mattn/go-sqlite3"
@@ -9,15 +10,15 @@ import (
 	"os"
 )
 
-var (
-	conf         = configure.New()
-	Discord, err = discordgo.New()
-	botKey       = conf.String("botKey", "", "Bot key value")
-	status       = conf.String("status", "", "Discord status for bot")
-)
-
 // Version GoFox
-const Version = "v0.5.0"
+const Version = "v0.6.0"
+
+var (
+	Router = router.New()
+	conf   = configure.New()
+	botKey = conf.String("botKey", "", "Bot key value")
+	status = conf.String("status", "", "Discord status for bot")
+)
 
 func init() {
 	// Pull in configuration
@@ -34,8 +35,8 @@ func main() {
 	// Start DB
 	sqldb.ConnectDB()
 
-	// Set bot token
-	Discord.Token = *botKey
+	// Set discord bot token
+	Discord, err := discordgo.New("Bot " + *botKey)
 
 	// Verify a Token was provided
 	if Discord.Token == "" {
@@ -46,15 +47,22 @@ func main() {
 	// Open a websocket connection to Discord
 	err = Discord.Open()
 	log.ErrCheck("Error opening connection to Discord", err)
-	defer Discord.Close()
+	defer func(Discord *discordgo.Session) {
+		err := Discord.Close()
+		if err != nil {
 
-	err = Discord.UpdateStatus(0, *status)
+		}
+	}(Discord)
+
+	err = Discord.UpdateGameStatus(0, *status)
 	log.ErrCheck("Error attempting to set my status", err)
 
 	servers := Discord.State.Guilds
 
 	log.Info.Printf("GoFox is running version: %s", Version)
 	log.Info.Printf("GoFox has started on %d server(s)", len(servers))
+
+	Discord.AddHandler(Router.OnMessageCreate)
 
 	<-make(chan struct{})
 }
