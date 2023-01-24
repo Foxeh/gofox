@@ -19,8 +19,10 @@ go build
 * "github.com/paked/configure"
 * "github.com/bwmarrin/discordgo"
 * "github.com/subosito/shorturl"
+* "github.com/mattn/go-sqlite3"
 
 ##### Resources
 * Dicordgo - https://github.com/bwmarrin/discordgo
 * Disgord - https://github.com/bwmarrin/disgord
 * Shorturl - https://github.com/subosito/shorturl
+* sqlite - https://github.com/mattn/go-sqlite3
