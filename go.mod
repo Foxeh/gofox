@@ -1,16 +1,21 @@
 module github.com/Foxeh/gofox
 
-go 1.12
+go 1.19
 
 require (
-	github.com/bwmarrin/discordgo v0.26.1
-	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/mattn/go-sqlite3 v2.0.3+incompatible
+	github.com/bwmarrin/discordgo v0.27.0
+	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/paked/configure v0.0.0-20190218140148-28f9c3f21a44
 	github.com/subosito/shorturl v1.0.0
-	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/sys v0.0.0-20220907062415-87db552b00fd // indirect
-	gorm.io/driver/sqlite v1.3.6
-	gorm.io/gorm v1.23.8
+	gorm.io/driver/sqlite v1.4.4
+	gorm.io/gorm v1.24.3
+)
+
+require (
+	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	golang.org/x/crypto v0.5.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
 )
