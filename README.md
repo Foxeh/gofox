@@ -6,23 +6,28 @@ Use go get to download repository into your Go environment
 ```
 go get github.com/foxeh/gofox
 ```
+### Settings
+
+* Rename or create new file
+
+`config.example.json > config.json`
+
+* Edit contents
+
+```json
+{
+  "botKey": "<INSERT REALLY LONG BOT KEY HERE>",
+  "wolframID": "<WOLFRAM ALPHA REQUEST KEY>",
+  "status": "<BOT STATUS FOR DISCORD>"
+}
+```
+
 
 ### Running
-* Setup config file
+
 ```
 cd $GOPATH/src/github.com/foxeh/gofox
 go build
 ./gofox
 ```
 
-### Libraries
-* "github.com/paked/configure"
-* "github.com/bwmarrin/discordgo"
-* "github.com/subosito/shorturl"
-* "github.com/mattn/go-sqlite3"
-
-##### Resources
-* Dicordgo - https://github.com/bwmarrin/discordgo
-* Disgord - https://github.com/bwmarrin/disgord
-* Shorturl - https://github.com/subosito/shorturl
-* sqlite - https://github.com/mattn/go-sqlite3
