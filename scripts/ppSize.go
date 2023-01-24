@@ -14,12 +14,6 @@ func PpRanking(dm *discordgo.Message, score int) {
 
 	var ppNumbers PpNumbers
 
-	//Only need this if taking scores from another bot
-	//re := regexp.MustCompile(`[-]?\d[\d,]*[]?[\d{2}]*`)
-	//strScore := re.FindString(dm.Embeds[0].Description)
-	//score, err := strconv.Atoi(strScore)
-	//log.ErrCheck("Failed to convert score to int", err)
-
 	user := dm.Author.String()
 	timeStamp := dm.Timestamp
 

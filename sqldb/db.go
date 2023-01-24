@@ -30,6 +30,50 @@ type PpNumbers struct {
 	AverageScore int
 }
 
+type GayNumbers struct {
+	gorm.Model
+	Date         time.Time
+	User         string
+	CurrentScore int
+	NumberOfWins int
+	LastWinDate  time.Time
+	NumberTries  int
+	AverageScore int
+}
+
+type EpicgamerNumbers struct {
+	gorm.Model
+	Date         time.Time
+	User         string
+	CurrentScore int
+	NumberOfWins int
+	LastWinDate  time.Time
+	NumberTries  int
+	AverageScore int
+}
+
+type SimpNumbers struct {
+	gorm.Model
+	Date         time.Time
+	User         string
+	CurrentScore int
+	NumberOfWins int
+	LastWinDate  time.Time
+	NumberTries  int
+	AverageScore int
+}
+
+type WaifuNumbers struct {
+	gorm.Model
+	Date         time.Time
+	User         string
+	CurrentScore int
+	NumberOfWins int
+	LastWinDate  time.Time
+	NumberTries  int
+	AverageScore int
+}
+
 var DB *gorm.DB
 
 func ConnectDB() {

@@ -5,42 +5,44 @@ import (
 	"github.com/Foxeh/gofox/scripts"
 	"github.com/bwmarrin/discordgo"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
 
-func (m *Router) Pp(ds *discordgo.Session, dm *discordgo.Message, ctx *Context) {
+func (m *Router) Waifu(ds *discordgo.Session, dm *discordgo.Message, ctx *Context) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	min := 0
-	max := 20
+	max := 100
 	score := min + rand.Intn(max-min)
+	strscore := strconv.Itoa(score)
 
 	var descrip string
 	mentions := dm.Mentions
 	if len(mentions) > 0 {
 		stripMention := strings.Split(dm.Mentions[0].String(), "#")
-		descrip = stripMention[0] + "'s penis\n"
+		descrip = stripMention[0] + " is " + strscore + "% waifu "
 		dm.Author = dm.Mentions[0]
 	} else {
-		stripAuthor := strings.Split(dm.Author.String(), "#")
-		descrip = stripAuthor[0] + "'s penis\n"
+		descrip = "You are " + strscore + "% waifu "
 	}
 
-	pp := ""
-	for i := 0; i < score; i++ {
-		pp = pp + "="
+	if score < 30 {
+		descrip = descrip + ":cold_face:"
+	} else if 30 < score && score < 70 {
+		descrip = descrip + ":open_mouth:"
+	} else {
+		descrip = descrip + ":hot_face:"
 	}
-
-	descrip = descrip + "8" + pp + "D"
 
 	embed := new(discordgo.MessageEmbed)
-	(*embed).Title = "peepee size machine"
+	(*embed).Title = "waifu r8 machine"
 	(*embed).Description = descrip
 
 	_, err := ds.ChannelMessageSendEmbed(dm.ChannelID, embed)
 	log.ErrCheck("Failed to send message", err)
 
-	scripts.PpRanking(dm, score)
+	scripts.WaifuRanking(dm, score)
 
 	return
 }

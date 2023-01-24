@@ -5,42 +5,44 @@ import (
 	"github.com/Foxeh/gofox/scripts"
 	"github.com/bwmarrin/discordgo"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
 
-func (m *Router) Pp(ds *discordgo.Session, dm *discordgo.Message, ctx *Context) {
+func (m *Router) Simprate(ds *discordgo.Session, dm *discordgo.Message, ctx *Context) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	min := 0
-	max := 20
+	max := 100
 	score := min + rand.Intn(max-min)
+	strscore := strconv.Itoa(score)
 
 	var descrip string
 	mentions := dm.Mentions
 	if len(mentions) > 0 {
 		stripMention := strings.Split(dm.Mentions[0].String(), "#")
-		descrip = stripMention[0] + "'s penis\n"
+		descrip = stripMention[0] + " is " + strscore + "% a simp "
 		dm.Author = dm.Mentions[0]
 	} else {
-		stripAuthor := strings.Split(dm.Author.String(), "#")
-		descrip = stripAuthor[0] + "'s penis\n"
+		descrip = "You are " + strscore + "% a simp "
 	}
 
-	pp := ""
-	for i := 0; i < score; i++ {
-		pp = pp + "="
+	if score < 30 {
+		descrip = descrip + ":sunglasses:"
+	} else if 30 < score && score < 70 {
+		descrip = descrip + ":face_with_raised_eyebrow:"
+	} else {
+		descrip = descrip + ":joy:"
 	}
-
-	descrip = descrip + "8" + pp + "D"
 
 	embed := new(discordgo.MessageEmbed)
-	(*embed).Title = "peepee size machine"
+	(*embed).Title = "simp r8 machine"
 	(*embed).Description = descrip
 
 	_, err := ds.ChannelMessageSendEmbed(dm.ChannelID, embed)
 	log.ErrCheck("Failed to send message", err)
 
-	scripts.PpRanking(dm, score)
+	scripts.SimpRanking(dm, score)
 
 	return
 }
