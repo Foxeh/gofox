@@ -21,7 +21,7 @@ func PpRanking(dm *discordgo.Message, score int) {
 	//log.ErrCheck("Failed to convert score to int", err)
 
 	user := dm.Author.String()
-	time := dm.Timestamp
+	timeStamp := dm.Timestamp
 
 	// Check if user exists
 	if err := sqldb.DB.Where("User = ?", user).First(&ppNumbers).Error; err != nil {
@@ -31,16 +31,16 @@ func PpRanking(dm *discordgo.Message, score int) {
 	sqldb.DB.First(&ppNumbers, "User = ?", user)
 
 	// Update user
-	updatePpScores(ppNumbers, time, score)
+	updatePpScores(ppNumbers, timeStamp, score)
 
 	return
 }
 
-func updatePpScores(ppNumbers PpNumbers, time time.Time, score int) {
+func updatePpScores(ppNumbers PpNumbers, timeStamp time.Time, score int) {
 	// Update averages
 	tries := ppNumbers.NumberTries + 1
 	average := ((ppNumbers.AverageScore * ppNumbers.NumberTries) + score) / tries
-	sqldb.DB.Model(&ppNumbers).Update("date", time)
+	sqldb.DB.Model(&ppNumbers).Update("date", timeStamp)
 	sqldb.DB.Model(&ppNumbers).Update("number_tries", tries)
 	sqldb.DB.Model(&ppNumbers).Update("average_score", average)
 

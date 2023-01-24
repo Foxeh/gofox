@@ -21,7 +21,7 @@ func StankRanking(dm *discordgo.Message, score int) {
 	//log.ErrCheck("Failed to convert score to int", err)
 
 	user := dm.Author.String()
-	time := dm.Timestamp
+	timeStamp := dm.Timestamp
 
 	// Check if user exists
 	if err := sqldb.DB.Where("User = ?", user).First(&stankNumbers).Error; err != nil {
@@ -31,16 +31,16 @@ func StankRanking(dm *discordgo.Message, score int) {
 	sqldb.DB.First(&stankNumbers, "User = ?", user)
 
 	// Update user
-	updateStankScores(stankNumbers, time, score)
+	updateStankScores(stankNumbers, timeStamp, score)
 
 	return
 }
 
-func updateStankScores(stankNumbers StankNumbers, time time.Time, score int) {
+func updateStankScores(stankNumbers StankNumbers, timeStamp time.Time, score int) {
 	// Update averages
 	tries := stankNumbers.NumberTries + 1
 	average := ((stankNumbers.AverageScore * stankNumbers.NumberTries) + score) / tries
-	sqldb.DB.Model(&stankNumbers).Update("date", time)
+	sqldb.DB.Model(&stankNumbers).Update("date", timeStamp)
 	sqldb.DB.Model(&stankNumbers).Update("number_tries", tries)
 	sqldb.DB.Model(&stankNumbers).Update("average_score", average)
 
