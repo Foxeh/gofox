@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/Foxeh/gofox/log"
 	"github.com/Foxeh/gofox/router"
 	"github.com/Foxeh/gofox/sqldb"
@@ -14,10 +15,32 @@ import (
 const Version = "v0.6.0"
 
 var (
-	Router = router.New()
-	conf   = configure.New()
-	botKey = conf.String("botKey", "", "Bot key value")
-	status = conf.String("status", "", "Discord status for bot")
+	Router  = router.New()
+	conf    = configure.New()
+	botKey  = conf.String("botKey", "", "Bot key value")
+	status  = conf.String("status", "", "Discord status for bot")
+	GuildID = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
+
+	commands = []*discordgo.ApplicationCommand{
+		{
+			Name:        "options",
+			Description: "Get network status of bot.",
+		},
+	}
+	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"options": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: "Prefix: pls " +
+						"Commands: pp, simprate, stankrate, waifu, gayrate, epicgamer, wolfram",
+				},
+			})
+			if err != nil {
+				log.ErrCheck("Error attempting to run slash command", err)
+			}
+		},
+	}
 )
 
 func init() {
@@ -63,6 +86,20 @@ func main() {
 	log.Info.Printf("GoFox has started on %d server(s)", len(servers))
 
 	Discord.AddHandler(Router.OnMessageCreate)
+	Discord.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			h(s, i)
+		}
+	})
+
+	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
+	for i, v := range commands {
+		cmd, err := Discord.ApplicationCommandCreate(Discord.State.User.ID, *GuildID, v)
+		if err != nil {
+			log.ErrCheck("Cannot create command: %v", err)
+		}
+		registeredCommands[i] = cmd
+	}
 
 	<-make(chan struct{})
 }
