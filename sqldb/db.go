@@ -89,6 +89,18 @@ func ConnectDB() {
 	err = db.AutoMigrate(&PpNumbers{})
 	log.ErrCheck("Failed to create tables", err)
 
+	err = db.AutoMigrate(&GayNumbers{})
+	log.ErrCheck("Failed to create tables", err)
+
+	err = db.AutoMigrate(&EpicgamerNumbers{})
+	log.ErrCheck("Failed to create tables", err)
+
+	err = db.AutoMigrate(&SimpNumbers{})
+	log.ErrCheck("Failed to create tables", err)
+
+	err = db.AutoMigrate(&WaifuNumbers{})
+	log.ErrCheck("Failed to create tables", err)
+
 	log.Info.Printf("Tables created.")
 
 	DB = db
