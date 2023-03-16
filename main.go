@@ -23,17 +23,16 @@ var (
 
 	commands = []*discordgo.ApplicationCommand{
 		{
-			Name:        "options",
-			Description: "Get network status of bot.",
+			Name:        "info",
+			Description: "Get info on bot.",
 		},
 	}
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"options": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		"info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: "Prefix: pls " +
-						"Commands: pp, simprate, stankrate, waifu, gayrate, epicgamer, wolfram",
+					Content: "Fuck Duncan\n" + "https://www.yitties.gg/",
 				},
 			})
 			if err != nil {

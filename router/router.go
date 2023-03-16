@@ -4,11 +4,9 @@
 package router
 
 import (
-	"fmt"
 	"github.com/Foxeh/gofox/log"
 	"github.com/bwmarrin/discordgo"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -141,31 +139,6 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	if c != nil {
 		if c.Type == discordgo.ChannelTypeDM {
 			ctx.IsPrivate, ctx.IsDirected = true, true
-		}
-	}
-
-	// Detect @name or @nick mentions
-	if !ctx.IsDirected {
-
-		// Detect if Bot was @mentioned
-		for _, v := range mc.Mentions {
-
-			if v.ID == ds.State.User.ID {
-
-				ctx.IsDirected, ctx.HasMention = true, true
-
-				reg := regexp.MustCompile(fmt.Sprintf("<@!?(%s)>", ds.State.User.ID))
-
-				// Was the @mention the first part of the string?
-				if reg.FindStringIndex(ctx.Content)[0] == 0 {
-					ctx.HasMentionFirst = true
-				}
-
-				// strip bot mention tags from content string
-				ctx.Content = reg.ReplaceAllString(ctx.Content, "")
-
-				break
-			}
 		}
 	}
 
