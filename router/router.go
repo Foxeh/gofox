@@ -145,7 +145,7 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	// Detect prefix mention
 	if len(m.Prefix) > 0 {
 		// TODO : Option to change prefix to support a per-guild user defined prefix
-		if strings.HasPrefix(ctx.Content, m.Prefix) {
+		if strings.HasPrefix(strings.ToLower(ctx.Content), m.Prefix) {
 			ctx.IsDirected, ctx.HasPrefix, ctx.HasMentionFirst = true, true, true
 			ctx.Content = strings.TrimPrefix(ctx.Content, m.Prefix)
 		}
