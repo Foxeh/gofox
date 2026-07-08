@@ -1,3 +1,5 @@
+[![Deploy to AWS ECS](https://github.com/Foxeh/gofox/gofox/yitties/actions/workflows/yitties-aws.yml/badge.svg?branch=master)](https://github.com/Foxeh/gofox/gofox/yitties/actions/workflows/yitties-aws.yml/badge.svg?branch=master)
+
 # GoFox
 Discord bot written in Go.
 
