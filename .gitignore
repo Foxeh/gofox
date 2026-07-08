@@ -24,3 +24,4 @@ GoFox.iml
 gofox.db
 discord-gofox.pem
 notes.md
+.env

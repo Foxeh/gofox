@@ -31,4 +31,3 @@ cd $GOPATH/src/github.com/foxeh/gofox
 go build
 ./gofox
 ```
-
