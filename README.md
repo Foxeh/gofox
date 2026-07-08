@@ -24,7 +24,6 @@ go get github.com/foxeh/gofox
 }
 ```
 
-
 ### Running
 
 ```
