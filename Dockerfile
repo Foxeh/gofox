@@ -2,7 +2,9 @@
 FROM golang:tip-alpine3.24
 
 ARG BOT_STATUS
+ARG BOT_KEY
 ENV BOT_STATUS=$BOT_STATUS
+ENV BOT_KEY=$BOT_KEY
 
 WORKDIR /app
 
@@ -15,8 +17,7 @@ RUN apk update \
 
 COPY . .
 
-RUN --mount=type=secret,id=botkey,env=BOT_KEY ... \
-&& go mod tidy \
-&& go build -o main . \
+RUN go mod tidy \
+    && go build -o main .
 
 CMD ["./main"]
