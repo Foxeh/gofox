@@ -17,8 +17,8 @@ const Version = "v0.6.0"
 var (
 	Router  = router.New()
 	conf    = configure.New()
-	botKey  = conf.String("botKey", "", "Bot key value")
-	status  = conf.String("status", "", "Discord status for bot")
+	botKey  = conf.String("bot-key", "", "Bot key value (env: BOT_KEY)")
+	status  = conf.String("bot-status", "", "Discord status for bot (env: BOT_STATUS)")
 	GuildID = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 
 	commands = []*discordgo.ApplicationCommand{

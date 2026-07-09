@@ -18,10 +18,19 @@ go get github.com/foxeh/gofox
 
 ```json
 {
-  "botKey": "<INSERT REALLY LONG BOT KEY HERE>",
-  "status": "<BOT STATUS FOR DISCORD>"
+  "bot-key": "<INSERT REALLY LONG BOT KEY HERE>",
+  "bot-status": "<BOT STATUS FOR DISCORD>"
 }
 ```
+
+Configuration can also be provided through environment variables, which
+take precedence over `config.json`. This is how the ECS deployment is
+configured:
+
+| Environment variable | Purpose |
+| --- | --- |
+| `BOT_KEY` | Discord bot token |
+| `BOT_STATUS` | Discord status for the bot |
 
 ### Running
 

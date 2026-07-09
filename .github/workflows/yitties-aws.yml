@@ -44,8 +44,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-          BOT_STATUS: ${{ vars.BOT_STATUS }}
-          BOT_KEY: ${{ secrets.BOT_KEY }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -65,6 +63,9 @@ jobs:
           task-definition: ./task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
+          environment-variables: |
+            BOT_KEY=${{ secrets.BOT_KEY }}
+            BOT_STATUS=${{ vars.BOT_STATUS }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2

@@ -1,4 +1,4 @@
 {
-  "botKey": "<INSERT REALLY LONG BOT KEY HERE>",
-  "status": "<BOT STATUS FOR DISCORD>"
+  "bot-key": "<INSERT REALLY LONG BOT KEY HERE>",
+  "bot-status": "<BOT STATUS FOR DISCORD>"
 }
