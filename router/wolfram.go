@@ -46,7 +46,7 @@ func (m *Router) Wolfram(ds *discordgo.Session, dm *discordgo.Message, ctx *Cont
 	pattern := m.Prefix + " wolfram "
 	content := strings.Replace(dm.Content, pattern, "", 1)
 	
-	log.Info.Printf(content)
+	log.Info.Printf("%s", content)
 
 	// Format query to URL
 	content = url.QueryEscape(content)

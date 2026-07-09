@@ -19,7 +19,7 @@ func GayRanking(dm *discordgo.Message, score int) {
 
 	// Check if user exists
 	if err := sqldb.DB.Where("User = ?", user).First(&gayNumbers).Error; err != nil {
-		log.Info.Printf("User: " + user + " does not exists in db, creating profile")
+		log.Info.Printf("User: %s does not exists in db, creating profile", user)
 		sqldb.DB.Create(&GayNumbers{User: user})
 	}
 	sqldb.DB.First(&gayNumbers, "User = ?", user)
