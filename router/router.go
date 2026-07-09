@@ -202,8 +202,9 @@ func editDistance(a, b string) int {
 // routes.
 func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate) {
 
-	// Ignore all messages created by the Bot account itself
-	if mc.Author.ID == ds.State.User.ID {
+	// Ignore our own messages and those of any other bot or webhook, so two
+	// bots can never trigger each other back and forth.
+	if mc.Author.ID == ds.State.User.ID || mc.Author.Bot {
 		return
 	}
 
