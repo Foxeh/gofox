@@ -43,6 +43,10 @@ var (
 )
 
 func init() {
+	// Initialize the shared logger before anything can log. The log package's
+	// loggers are nil until this runs.
+	log.Init(os.Stdout, os.Stdout, os.Stderr)
+
 	// Pull in configuration
 	conf.Use(configure.NewFlag())
 	conf.Use(configure.NewEnvironment())
