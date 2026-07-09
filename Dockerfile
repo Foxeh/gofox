@@ -1,23 +1,29 @@
 # syntax=docker/dockerfile:1
-FROM golang:tip-alpine3.24
+FROM golang:1.25-alpine AS build
 
-ARG BOT_STATUS
-ARG BOT_KEY
-ENV BOT_STATUS=$BOT_STATUS
-ENV BOT_KEY=$BOT_KEY
+WORKDIR /src
 
-WORKDIR /app
+# gcc/musl-dev are required to compile the cgo-based go-sqlite3 driver
+RUN apk add --no-cache build-base
 
 COPY go.mod go.sum ./
-
-RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache sqlite \
-    && go mod download
+RUN go mod download
 
 COPY . .
 
-RUN go mod tidy \
-    && go build -o main .
+RUN CGO_ENABLED=1 go build -ldflags="-s -w" -o /gofox .
 
-CMD ["./main"]
+FROM alpine:3.22
+
+# BOT_KEY and BOT_STATUS are injected at runtime by the ECS task
+# definition — never bake them into the image.
+RUN adduser -D -H gofox
+
+WORKDIR /app
+COPY --from=build /gofox ./gofox
+
+# /app must stay writable: the bot creates gofox.db in its working directory
+RUN chown gofox:gofox /app
+USER gofox
+
+CMD ["./gofox"]

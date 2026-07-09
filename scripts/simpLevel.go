@@ -19,7 +19,7 @@ func SimpRanking(dm *discordgo.Message, score int) {
 
 	// Check if user exists
 	if err := sqldb.DB.Where("User = ?", user).First(&simpNumbers).Error; err != nil {
-		log.Info.Printf("User: " + user + " does not exists in db, creating profile")
+		log.Info.Printf("User: %s does not exists in db, creating profile", user)
 		sqldb.DB.Create(&SimpNumbers{User: user})
 	}
 	sqldb.DB.First(&simpNumbers, "User = ?", user)
