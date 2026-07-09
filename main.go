@@ -17,8 +17,6 @@ const Version = "v0.6.0"
 var (
 	Router  = router.New()
 	conf    = configure.New()
-	botKey  = conf.String("bot-key", "", "Bot key value (env: BOT_KEY)")
-	status  = conf.String("bot-status", "", "Discord status for bot (env: BOT_STATUS)")
 	GuildID = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 
 	commands = []*discordgo.ApplicationCommand{
@@ -47,13 +45,6 @@ func init() {
 	// loggers are nil until this runs.
 	log.Init(os.Stdout, os.Stdout, os.Stderr)
 
-	// Pull in configuration
-	conf.Use(configure.NewFlag())
-	conf.Use(configure.NewEnvironment())
-	if _, err := os.Stat("config.json"); err == nil {
-		conf.Use(configure.NewJSONFromFile("config.json"))
-	}
-	conf.Parse()
 }
 
 func main() {
@@ -61,12 +52,17 @@ func main() {
 	// Start DB
 	sqldb.ConnectDB()
 
-	// Set discord bot token
-	Discord, err := discordgo.New("Bot " + *botKey)
+	// Verify a token was provided before dialing Discord.
+	if os.Getenv("BOT_KEY") == "" {
+		log.Error.Printf("No Discord authentication token: set the BOT_KEY environment variable")
+		return
+	}
 
-	// Verify a Token was provided
-	if Discord.Token == "" {
-		log.Warning.Printf("You must provide a Discord authentication token.")
+	// Set discord bot token
+	Discord, err := discordgo.New("Bot " + os.Getenv("BOT_KEY"))
+
+	if err != nil {
+		log.ErrCheck("Error creating Discord session", err)
 		return
 	}
 
@@ -80,7 +76,7 @@ func main() {
 		}
 	}(Discord)
 
-	err = Discord.UpdateGameStatus(0, *status)
+	err = Discord.UpdateGameStatus(0, os.Getenv("BOT_STATUS"))
 	log.ErrCheck("Error attempting to set my status", err)
 
 	servers := Discord.State.Guilds

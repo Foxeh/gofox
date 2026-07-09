@@ -16,15 +16,7 @@ go get github.com/foxeh/gofox
 
 * Edit contents
 
-```json
-{
-  "bot-key": "<INSERT REALLY LONG BOT KEY HERE>",
-  "bot-status": "<BOT STATUS FOR DISCORD>"
-}
-```
-
-Configuration can also be provided through environment variables, which
-take precedence over `config.json`. This is how the ECS deployment is
+Configuration is provided through environment variables. This is how the ECS deployment is
 configured:
 
 | Environment variable | Purpose |
