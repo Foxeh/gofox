@@ -208,8 +208,6 @@ func editDistance(a, b string) int {
 // routes.
 func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate) {
 
-	var err error
-
 	// Ignore all messages created by the Bot account itself
 	if mc.Author.ID == ds.State.User.ID {
 		return
@@ -220,27 +218,9 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 		Content: strings.TrimSpace(mc.Content),
 	}
 
-	// Fetch the channel for this Message
-	var c *discordgo.Channel
-	c, err = ds.State.Channel(mc.ChannelID)
-	if err != nil {
-		// Try fetching via REST API
-		c, err = ds.Channel(mc.ChannelID)
-		if err != nil {
-			log.Warning.Printf("Unable to fetch Channel for Message, %s", err)
-		} else {
-			// Attempt to add this channel into our State
-			err = ds.State.ChannelAdd(c)
-			if err != nil {
-				log.Warning.Printf("Error updating State with Channel, %s", err)
-			}
-		}
-	}
-	// Add Channel info into Context (if we successfully got the channel)
-	if c != nil {
-		if c.Type == discordgo.ChannelTypeDM {
-			ctx.IsPrivate, ctx.IsDirected = true, true
-		}
+	// A message with no guild is a direct message, no channel lookup needed.
+	if mc.GuildID == "" {
+		ctx.IsPrivate, ctx.IsDirected = true, true
 	}
 
 	// Detect prefix mention
