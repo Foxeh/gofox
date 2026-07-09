@@ -7,14 +7,8 @@ import (
 	"fmt"
 	"github.com/Foxeh/gofox/log"
 	"github.com/bwmarrin/discordgo"
-	"os"
 	"strings"
 )
-
-func init() {
-	// Call logger
-	log.Init(os.Stdout, os.Stdout, os.Stderr)
-}
 
 // Route holds information about a specific message route handler
 type Route struct {
@@ -71,7 +65,11 @@ func (m *Router) Route(pattern, desc string, cb HandlerFunc) {
 // exact command name, so commands can still be mixed into a sentence.
 // The returned fields are the words following the matched command.
 func (m *Router) FuzzyMatch(msg string) (*Route, []string) {
-	fields := strings.Fields(strings.ToLower(msg))
+	return m.match(strings.Fields(strings.ToLower(msg)))
+}
+
+// match implements FuzzyMatch on an already-tokenized, lowercased message.
+func (m *Router) match(fields []string) (*Route, []string) {
 	if len(fields) == 0 {
 		return nil, nil
 	}
@@ -235,7 +233,8 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	}
 
 	// Try to find the "best match" command out of the message.
-	r, fl := m.FuzzyMatch(ctx.Content)
+	fields := strings.Fields(strings.ToLower(ctx.Content))
+	r, fl := m.match(fields)
 	if r != nil {
 		// TODO: Change to do something different when mentioned vs using prefix.
 		// TODO: Possibly add rate limit?
@@ -248,7 +247,6 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	// The message was directed at the bot but matched nothing; if the first
 	// word was close to a known command, suggest it. Otherwise stay silent
 	// so casual prefix use doesn't draw replies.
-	fields := strings.Fields(strings.ToLower(ctx.Content))
 	if len(fields) == 0 {
 		return
 	}
