@@ -19,7 +19,6 @@ go get github.com/foxeh/gofox
 ```json
 {
   "botKey": "<INSERT REALLY LONG BOT KEY HERE>",
-  "wolframID": "<WOLFRAM ALPHA REQUEST KEY>",
   "status": "<BOT STATUS FOR DISCORD>"
 }
 ```
