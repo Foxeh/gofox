@@ -270,16 +270,18 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 		return
 	}
 
-	// The message was directed at the bot but matched nothing; point the
-	// user at help, with suggestions when the word was close to a command.
+	// The message was directed at the bot but matched nothing; if the first
+	// word was close to a known command, suggest it. Otherwise stay silent
+	// so casual prefix use doesn't draw replies.
 	fields := strings.Fields(strings.ToLower(ctx.Content))
 	if len(fields) == 0 {
 		return
 	}
-	reply := fmt.Sprintf("Unknown command %q.", fields[0])
-	if sugg := m.Suggest(fields[0]); len(sugg) > 0 {
-		reply += " Did you mean: " + strings.Join(sugg, ", ") + "?"
+	sugg := m.Suggest(fields[0])
+	if len(sugg) == 0 {
+		return
 	}
-	reply += fmt.Sprintf(" Try `%s help`.", m.Prefix)
+	reply := fmt.Sprintf("Unknown command %q. Did you mean: %s? Try `%s help`.",
+		fields[0], strings.Join(sugg, ", "), m.Prefix)
 	_, _ = ds.ChannelMessageSend(mc.ChannelID, reply)
 }
