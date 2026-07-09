@@ -3,7 +3,7 @@ module github.com/Foxeh/gofox
 go 1.25.0
 
 require (
-	github.com/bwmarrin/discordgo v0.27.0
+	github.com/bwmarrin/discordgo v0.29.0
 	github.com/mattn/go-sqlite3 v1.14.47
 	github.com/paked/configure v0.0.0-20190218140148-28f9c3f21a44
 	github.com/subosito/shorturl v1.0.0
