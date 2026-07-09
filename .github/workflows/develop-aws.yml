@@ -1,19 +1,19 @@
 # This workflow will build and push a new container image to Amazon ECR,
-# and then will deploy a new task definition to Amazon ECS, when there is a push to the "master" branch.
+# and then will deploy a new task definition to Amazon ECS, when there is a push to the "develop" branch.
 
 name: Deploy to AWS
 
 on:
   push:
-    branches: [ "prod" ]
+    branches: [ "master" ]
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: gofox/yitties
-  ECS_CLUSTER: yitties-discord-bot
-  ECS_SERVICE: yitties-task-definition-service
-  ECS_TASK_DEFINITION: yitties-task-definition
-  CONTAINER_NAME: yitties-discord-bot
+  ECR_REPOSITORY: gofox/develop
+  ECS_CLUSTER: develop-discord-bot
+  ECS_SERVICE: develop-task-definition-service
+  ECS_TASK_DEFINITION: develop-task-definition
+  CONTAINER_NAME: develop-discord-bot
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: production
+    environment: develop
 
     steps:
       - name: Checkout
