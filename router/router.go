@@ -1,6 +1,6 @@
-// Package router provides a simple Discord message route multiplexer that
-// parses messages and then executes a matching registered handler, if found.
-// Router can be used with both Disgord and the DiscordGo library.
+// Package router provides a simple Discord message route multiplexer for the
+// DiscordGo library that parses messages and then executes a matching
+// registered handler, if found.
 package router
 
 import (
@@ -27,13 +27,11 @@ type Route struct {
 // Context holds a bit of extra data we pass along to route handlers
 // This way processing some of this only needs to happen once.
 type Context struct {
-	Fields          []string
-	Content         string
-	IsDirected      bool
-	IsPrivate       bool
-	HasPrefix       bool
-	HasMention      bool
-	HasMentionFirst bool
+	Fields     []string
+	Content    string
+	IsDirected bool
+	IsPrivate  bool
+	HasPrefix  bool
 }
 
 // HandlerFunc is the function signature required for a message route handler.
@@ -41,9 +39,8 @@ type HandlerFunc func(*discordgo.Session, *discordgo.Message, *Context)
 
 // Router is the main struct for all Router methods.
 type Router struct {
-	Routes  []*Route
-	Prefix  string
-	Pattern string
+	Routes []*Route
+	Prefix string
 }
 
 // New returns a new Discord message route Router
@@ -53,16 +50,13 @@ func New() *Router {
 	return m
 }
 
-// Route allows you to register a route
-func (m *Router) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
-
-	r := Route{}
-	r.Pattern = pattern
-	r.Description = desc
-	r.Run = cb
-	m.Routes = append(m.Routes, &r)
-
-	return &r, nil
+// Route registers a command pattern with the handler to run for it.
+func (m *Router) Route(pattern, desc string, cb HandlerFunc) {
+	m.Routes = append(m.Routes, &Route{
+		Pattern:     pattern,
+		Description: desc,
+		Run:         cb,
+	})
 }
 
 // FuzzyMatch attempts to find the best route match for a given message.
@@ -227,7 +221,7 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	if len(m.Prefix) > 0 {
 		// TODO : Option to change prefix to support a per-guild user defined prefix
 		if strings.HasPrefix(strings.ToLower(ctx.Content), m.Prefix) {
-			ctx.IsDirected, ctx.HasPrefix, ctx.HasMentionFirst = true, true, true
+			ctx.IsDirected, ctx.HasPrefix = true, true
 			// Slice rather than TrimPrefix so a mixed-case prefix ("Pls") is
 			// stripped too.
 			ctx.Content = strings.TrimSpace(ctx.Content[len(m.Prefix):])

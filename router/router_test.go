@@ -9,7 +9,7 @@ import (
 func testRouter() *Router {
 	m := New()
 	for _, p := range []string{"help", "pp", "simp", "gayrate", "waifu", "stankrate", "epicgamer"} {
-		_, _ = m.Route(p, "desc", nil)
+		m.Route(p, "desc", nil)
 	}
 	return m
 }
