@@ -216,10 +216,13 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 		ctx.IsPrivate, ctx.IsDirected = true, true
 	}
 
-	// Detect prefix mention
+	// Detect the prefix, which must be a word of its own: "pls help" is
+	// directed at the bot, "plshelp" is not. Content is already trimmed, so
+	// when the first word is the prefix it sits at the start of the string.
 	if len(m.Prefix) > 0 {
 		// TODO : Option to change prefix to support a per-guild user defined prefix
-		if strings.HasPrefix(strings.ToLower(ctx.Content), m.Prefix) {
+		words := strings.Fields(strings.ToLower(ctx.Content))
+		if len(words) > 0 && words[0] == m.Prefix {
 			ctx.IsDirected, ctx.HasPrefix = true, true
 			// Slice rather than TrimPrefix so a mixed-case prefix ("Pls") is
 			// stripped too.

@@ -1,9 +1,21 @@
 package router
 
 import (
+	"io"
+	"os"
 	"reflect"
+	"strings"
 	"testing"
+
+	"github.com/Foxeh/gofox/log"
+	"github.com/bwmarrin/discordgo"
 )
+
+func TestMain(m *testing.M) {
+	// The logger is normally initialized by main; handlers log on dispatch.
+	log.Init(io.Discard, io.Discard, io.Discard)
+	os.Exit(m.Run())
+}
 
 // testRouter returns a Router registered with the bot's real command set.
 func testRouter() *Router {
@@ -61,6 +73,60 @@ func TestFuzzyMatch(t *testing.T) {
 				if args[i] != tt.args[i] {
 					t.Fatalf("FuzzyMatch(%q) args = %v, want %v", tt.msg, args, tt.args)
 				}
+			}
+		})
+	}
+}
+
+// TestOnMessageCreateDispatch exercises the gating in OnMessageCreate: the
+// prefix must be a standalone word, DMs are directed without a prefix, and
+// bot-authored messages are dropped. Cases must not trigger the suggestion
+// reply, which would hit the Discord API.
+func TestOnMessageCreateDispatch(t *testing.T) {
+	ds := &discordgo.Session{State: discordgo.NewState()}
+	ds.State.User = &discordgo.User{ID: "bot-id"}
+
+	tests := []struct {
+		name     string
+		content  string
+		guildID  string
+		authorID string
+		bot      bool
+		wantRun  bool
+		wantArgs []string
+	}{
+		{"prefixed command", "pls help", "guild", "user", false, true, nil},
+		{"mixed case prefix", "Pls Help me", "guild", "user", false, true, []string{"me"}},
+		{"prefix glued to command", "plshelp", "guild", "user", false, false, nil},
+		{"prefix with trailing letters", "plsss help", "guild", "user", false, false, nil},
+		{"no prefix in guild", "help", "guild", "user", false, false, nil},
+		{"dm needs no prefix", "help", "", "user", false, true, nil},
+		{"prefixed dm", "pls help", "", "user", false, true, nil},
+		{"own message ignored", "pls help", "guild", "bot-id", false, false, nil},
+		{"other bot ignored", "pls help", "guild", "other-bot", true, false, nil},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := New()
+			var gotArgs []string
+			ran := false
+			m.Route("help", "desc", func(_ *discordgo.Session, _ *discordgo.Message, ctx *Context) {
+				ran = true
+				gotArgs = ctx.Fields
+			})
+
+			m.OnMessageCreate(ds, &discordgo.MessageCreate{Message: &discordgo.Message{
+				Content: tt.content,
+				GuildID: tt.guildID,
+				Author:  &discordgo.User{ID: tt.authorID, Bot: tt.bot},
+			}})
+
+			if ran != tt.wantRun {
+				t.Fatalf("handler ran = %v, want %v", ran, tt.wantRun)
+			}
+			if ran && strings.Join(gotArgs, " ") != strings.Join(tt.wantArgs, " ") {
+				t.Fatalf("handler args = %v, want %v", gotArgs, tt.wantArgs)
 			}
 		})
 	}
