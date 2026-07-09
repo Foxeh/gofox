@@ -1,5 +1,4 @@
 {
-  "botKey": "<INSERT REALLY LONG BOT KEY HERE>",
-  "wolframID": "<WOLFRAM ALPHA REQUEST KEY>",
-  "status": "<BOT STATUS FOR DISCORD>"
+  "bot-key": "<INSERT REALLY LONG BOT KEY HERE>",
+  "bot-status": "<BOT STATUS FOR DISCORD>"
 }

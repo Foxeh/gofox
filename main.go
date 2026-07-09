@@ -17,8 +17,8 @@ const Version = "v0.6.0"
 var (
 	Router  = router.New()
 	conf    = configure.New()
-	botKey  = conf.String("botKey", "", "Bot key value")
-	status  = conf.String("status", "", "Discord status for bot")
+	botKey  = conf.String("bot-key", "", "Bot key value (env: BOT_KEY)")
+	status  = conf.String("bot-status", "", "Discord status for bot (env: BOT_STATUS)")
 	GuildID = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 
 	commands = []*discordgo.ApplicationCommand{
@@ -43,6 +43,10 @@ var (
 )
 
 func init() {
+	// Initialize the shared logger before anything can log. The log package's
+	// loggers are nil until this runs.
+	log.Init(os.Stdout, os.Stdout, os.Stderr)
+
 	// Pull in configuration
 	conf.Use(configure.NewFlag())
 	conf.Use(configure.NewEnvironment())
