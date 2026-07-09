@@ -240,7 +240,6 @@ func (m *Router) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCre
 	r, fl := m.match(fields)
 	if r != nil {
 		// TODO: Change to do something different when mentioned vs using prefix.
-		// TODO: Possibly add rate limit?
 		log.Info.Printf("Time: %s || Author: %s || Message: %s\n", mc.Timestamp, mc.Author, mc.Content)
 		ctx.Fields = fl
 		r.Run(ds, mc.Message, ctx)
