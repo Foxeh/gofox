@@ -1,5 +1,5 @@
-[![Deploy to Development](https://github.com/Foxeh/gofox/actions/workflows/develop-aws.yml/badge.svg?branch=master)](https://github.com/Foxeh/gofox/actions/workflows/develop-aws.yml/badge.svg?branch=master)
- [![Deploy to Production](https://github.com/Foxeh/gofox/actions/workflows/release-aws.yml/badge.svg?branch=release)](https://github.com/Foxeh/gofox/actions/workflows/release-aws.yml/badge.svg?branch=release)
+[![Develop Deployment](https://github.com/Foxeh/gofox/actions/workflows/develop-aws.yml/badge.svg?branch=master)](https://github.com/Foxeh/gofox/actions/workflows/develop-aws.yml/badge.svg?branch=master)
+ [![Release Deployment](https://github.com/Foxeh/gofox/actions/workflows/release-aws.yml/badge.svg?branch=release)](https://github.com/Foxeh/gofox/actions/workflows/release-aws.yml/badge.svg?branch=release)
 
 # GoFox
 Discord bot written in Go.

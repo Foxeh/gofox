@@ -7,7 +7,6 @@ import (
 	"github.com/Foxeh/gofox/sqldb"
 	"github.com/bwmarrin/discordgo"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/paked/configure"
 	"os"
 )
 
@@ -16,7 +15,6 @@ const Version = "v0.6.0"
 
 var (
 	Router  = router.New()
-	conf    = configure.New()
 	GuildID = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 
 	commands = []*discordgo.ApplicationCommand{
@@ -45,18 +43,24 @@ func init() {
 	// loggers are nil until this runs.
 	log.Init(os.Stdout, os.Stdout, os.Stderr)
 
+	// Verify a status was provided before starting.
+	if os.Getenv("BOT_STATUS") == "" {
+		log.Error.Printf("No status for the bot has been set.")
+		return
+	}
+
+	// Verify a token was provided before dialing Discord.
+	if os.Getenv("BOT_KEY") == "" {
+		log.Error.Printf("No Discord authentication token.")
+		return
+	}
+
 }
 
 func main() {
 
 	// Start DB
 	sqldb.ConnectDB()
-
-	// Verify a token was provided before dialing Discord.
-	if os.Getenv("BOT_KEY") == "" {
-		log.Error.Printf("No Discord authentication token: set the BOT_KEY environment variable")
-		return
-	}
 
 	// Set discord bot token
 	Discord, err := discordgo.New("Bot " + os.Getenv("BOT_KEY"))
